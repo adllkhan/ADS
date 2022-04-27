@@ -61,8 +61,10 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
     }
 
     private void afterItemDeletionRelocation(int i) {
-        for (int j=i; j<arr.length; j++){
-            arr[j] = arr[j+1];
+        if (i != length-1) {
+            for (int j = i; j < length; j++) {
+                arr[j] = arr[j + 1];
+            }
         }
     }
 
@@ -74,8 +76,10 @@ public class MyArrayList<T extends Comparable<T>> implements MyList<T> {
     }
 
     private void afterIndexDeletionRelocation(int index) {
-        for (int j=index; j<arr.length; j++){
-            arr[j] = arr[j+1];
+        if (index != length-1) {
+            for (int j = index; j < length; j++) {
+                arr[j] = arr[j + 1];
+            }
         }
     }
 
