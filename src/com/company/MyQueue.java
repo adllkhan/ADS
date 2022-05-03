@@ -3,7 +3,7 @@ package com.company;
 import java.util.ArrayList;
 
 public class MyQueue <T extends Comparable<T>> {
-    ArrayList<T> queue = new ArrayList<>();
+    MyArrayList<T> queue = new MyArrayList<>();
     int size = 0;
 
     void push(T data) {
