@@ -49,14 +49,47 @@ public class MyHash<K, V>{
     }
 
     public void put(K key, V value) {
-        chainArray[hash(key)] = key;
+        HashNode<K, V> newNode = new HashNode<>(key, value);
+        chainArray[hash(key)] = newNode;
+        size++;
     }
 
-    public V get(K key) {}
+    public V get(K key) {
+        return chainArray[(int)key].getValue();
+    }
 
-    public V remove(K key) {}
+    public V remove(K key) {
+        V helper = chainArray[(int)key].getValue();
+        HashNode<K, V>[] helperArray = new HashNode[size];
+        int j = 0;
+        for(int i = 0; i < size; i++) {
+            if((int)key == i){
+                continue;
+            } else {
+                helperArray[j++] = chainArray[i];
+            }
+        }
+        chainArray = helperArray;
+        size--;
+        return helper;
+    }
 
-    public boolean contains(V value) {}
+    public boolean contains(V value) {
+        for (int i = 0; i < size; i++) {
+            if (value == chainArray[i].getValue()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    public K getKey(V value) {}
+    public K getKey(V value) {
+        for (int i = 0; i < size; i++) {
+            if (value == chainArray[i].getValue()) {
+                return chainArray[i].getKey();
+            }
+        }
+        System.out.println("ERROR");
+        return null;
+    }
 }
