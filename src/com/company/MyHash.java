@@ -1,53 +1,62 @@
 package com.company;
 
-public class MyHash <T extends Comparable<T>> {
-    int size = 0;
-    class DataItem implements Comparable<DataItem> {
-        private T data;
-        private int key;
+public class MyHash<K, V>{
+    private class HashNode<K, V> {
+        private K key;
+        private V value;
+        private HashNode<K, V> next;
 
-        public DataItem (T data, int key) {
-            this.data = data;
+        public HashNode(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public void setKey(K key) {
             this.key = key;
         }
 
-        public T getData() {
-            return data;
+        public void setValue(V value) {
+            this.value = value;
         }
 
-        public void setData(T data) {
-            this.data = data;
-        }
-
-        public int getKey() {
+        public K getKey() {
             return key;
         }
 
-        public void setKey(int key) {
-            this.key = key;
-        }
-
-        @Override
-        public int compareTo(DataItem o) {
-            return 0;
+        public V getValue() {
+            return value;
         }
     }
 
-    public int hashCode(int key){
-        return key % size;
+    private HashNode<K, V>[] chainArray;
+    private int defaultSize = 11;
+    private int size;
+
+    public MyHash() {
+        this.chainArray = new HashNode[defaultSize];
+    }
+    public MyHash(int M){
+        size = M;
+        this.chainArray = new HashNode[size];
     }
 
-    MyArrayList<DataItem> hash = new MyArrayList<>();
-
-    public DataItem get(int key) {
-        int index = hashCode(key);
-        while(hash.get(index) != null) {
-            if(hash.get(index).getKey() == key) {
-                return hash.get(index);
-            }
-            index++;
-            index = index % size;
-        }
-        return null;
+    public int size(){
+        return size;
     }
+
+    private int hash(K key) {
+        return (int)key % size;
+    }
+
+    public void put(K key, V value) {
+        chainArray[hash(key)] = key;
+    }
+
+    public V get(K key) {}
+
+    public V remove(K key) {}
+
+    public boolean contains(V value) {}
+
+    public K getKey(V value) {}
 }
