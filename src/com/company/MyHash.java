@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.ArrayList;
+
 public class MyHash<K, V>{
     private class HashNode<K, V> {
         private K key;
@@ -28,16 +30,16 @@ public class MyHash<K, V>{
         }
     }
 
-    private HashNode<K, V>[] chainArray;
+    private ArrayList<HashNode<K, V>> chainArray;
     private int defaultSize = 11;
-    private int size;
+    private int size = 0;
 
     public MyHash() {
-        this.chainArray = new HashNode[defaultSize];
+        this.chainArray = new ArrayList<>(defaultSize);
     }
     public MyHash(int M){
         size = M;
-        this.chainArray = new HashNode[size];
+        this.chainArray = new ArrayList<>(size);
     }
 
     public int size(){
@@ -45,38 +47,42 @@ public class MyHash<K, V>{
     }
 
     private int hash(K key) {
-        return (int)key % size;
+        for(int i = 0; i < size; i++) {
+            if(key == chainArray.get(i).getKey()) {
+                return i;
+            }
+        }
+        return size;
     }
 
     public void put(K key, V value) {
         HashNode<K, V> newNode = new HashNode<>(key, value);
-        chainArray[hash(key)] = newNode;
+        chainArray.add(newNode);
         size++;
     }
 
     public V get(K key) {
-        return chainArray[(int)key].getValue();
+        if(hash(key) != size) {
+            return chainArray.get(hash(key)).getValue();
+        }
+        System.out.println("ERROR in get() or could not find value.");
+        return null;
     }
 
     public V remove(K key) {
-        V helper = chainArray[(int)key].getValue();
-        HashNode<K, V>[] helperArray = new HashNode[size];
-        int j = 0;
-        for(int i = 0; i < size; i++) {
-            if((int)key == i){
-                continue;
-            } else {
-                helperArray[j++] = chainArray[i];
-            }
+        if(hash(key) != size) {
+            V helper = chainArray.get(hash(key)).getValue();
+            chainArray.remove(hash(key));
+            size--;
+            return helper;
         }
-        chainArray = helperArray;
-        size--;
-        return helper;
+        System.out.println("ERROR in remove() or could not find value.");
+        return null;
     }
 
     public boolean contains(V value) {
         for (int i = 0; i < size; i++) {
-            if (value == chainArray[i].getValue()) {
+            if (value == chainArray.get(i).getValue()) {
                 return true;
             }
         }
@@ -85,11 +91,11 @@ public class MyHash<K, V>{
 
     public K getKey(V value) {
         for (int i = 0; i < size; i++) {
-            if (value == chainArray[i].getValue()) {
-                return chainArray[i].getKey();
+            if (value == chainArray.get(i).getValue()) {
+                return chainArray.get(i).getKey();
             }
         }
-        System.out.println("ERROR");
+        System.out.println("ERROR in getKey() or could not find key.");
         return null;
     }
 }
